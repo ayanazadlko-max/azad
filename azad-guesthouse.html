@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#15433A">
+<title>Azad Guest House</title>
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Azad%20Guest%20House%22%2C%22short_name%22%3A%22Azad%20GH%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23F6F1E4%22%2C%22theme_color%22%3A%22%2315433A%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%2522http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2522%2520viewBox%3D%25220%25200%2520100%2520100%2522%253E%253Crect%2520width%3D%2522100%2522%2520height%3D%2522100%2522%2520fill%3D%2522%252315433A%2522%2F%253E%253Ctext%2520x%3D%252250%2522%2520y%3D%252266%2522%2520font-size%3D%252256%2522%2520fill%3D%2522%2523C9A24B%2522%2520text-anchor%3D%2522middle%2522%2520font-family%3D%2522Georgia%2522%253EA%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+<style>
+  :root{
+    --jade:#15433A; --jadeLite:#1F5E50; --gold:#C9A24B; --goldSoft:#E8D9A8;
+    --ivory:#F6F1E4; --henna:#9C3B2E; --ink:#1A1714; --mute:#6E665A;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:Georgia,'Times New Roman',serif;background:var(--ivory);color:var(--ink);}
+  #app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--ivory);position:relative;padding-bottom:88px;}
+  .hdr{background:var(--jade);padding:18px 20px 22px;border-radius:0 0 24px 24px;position:relative;overflow:hidden;}
+  .hdr .arch{position:absolute;right:-20px;top:-20px;opacity:.18;}
+  .brand-sm{color:var(--goldSoft);font-size:11px;letter-spacing:3px;text-transform:uppercase;}
+  .brand-lg{color:var(--ivory);font-size:21px;font-weight:600;margin-top:2px;}
+  .brand-loc{color:var(--goldSoft);font-size:12px;opacity:.8;margin-top:2px;}
+  .wrap{padding:16px 18px;}
+  .sect{display:flex;align-items:center;gap:8px;margin:20px 0 12px;}
+  .sect .l{width:14px;height:1px;background:var(--gold);}
+  .sect span{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);white-space:nowrap;}
+  .sect .r{flex:1;height:1px;background:var(--goldSoft);}
+  .card{background:#fff;border-radius:16px;padding:15px;border:1px solid var(--goldSoft);margin-bottom:10px;}
+  .row{display:flex;justify-content:space-between;align-items:center;}
+  .stat-row{display:flex;gap:10px;}
+  .stat{flex:1;text-align:center;}
+  .stat .n{font-size:24px;font-weight:700;}
+  .stat .lbl{font-size:11px;color:var(--mute);}
+  .dot{width:9px;height:9px;border-radius:99px;display:inline-block;}
+  .chip{font-size:10px;padding:3px 8px;border-radius:99px;display:inline-block;}
+  .bar{height:6px;background:var(--ivory);border-radius:99px;overflow:hidden;margin-top:10px;}
+  .bar>div{height:100%;}
+  .muted{color:var(--mute);font-size:12px;}
+  .btn{border:none;border-radius:12px;padding:13px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;width:100%;}
+  .btn-gold{background:var(--gold);color:var(--jade);}
+  .btn-jade{background:var(--jade);color:var(--ivory);}
+  .btn-ghost{background:#fff;color:var(--jade);border:1px solid var(--goldSoft);}
+  .fab{position:fixed;bottom:100px;right:calc(50% - 240px + 18px);background:var(--gold);border:none;width:56px;height:56px;border-radius:18px;box-shadow:0 6px 18px rgba(201,162,75,.45);cursor:pointer;font-size:30px;color:var(--jade);line-height:1;display:flex;align-items:center;justify-content:center;z-index:30;}
+  @media(max-width:480px){.fab{right:18px;}}
+  .nav{position:fixed;bottom:0;width:100%;max-width:480px;background:#fff;border-top:1px solid var(--goldSoft);display:flex;padding:9px 0 13px;z-index:25;}
+  .nav button{flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit;color:var(--mute);font-size:10px;}
+  .nav button.active{color:var(--jade);font-weight:700;}
+  .nav svg{width:21px;height:21px;}
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(20,18,15,.55);z-index:50;display:flex;align-items:flex-end;justify-content:center;}
+  .modal{background:var(--ivory);width:100%;max-width:480px;border-radius:22px 22px 0 0;padding:20px 20px 28px;max-height:92vh;overflow-y:auto;animation:up .22s ease;}
+  @keyframes up{from{transform:translateY(40px);opacity:.4;}to{transform:translateY(0);opacity:1;}}
+  .modal h3{margin:0 0 4px;color:var(--jade);font-size:20px;}
+  label{display:block;font-size:12px;color:var(--mute);margin:12px 0 5px;letter-spacing:.5px;}
+  input,select,textarea{width:100%;padding:11px;border:1px solid var(--goldSoft);border-radius:10px;font-family:inherit;font-size:15px;background:#fff;color:var(--ink);}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .seg{display:flex;gap:8px;margin-top:5px;}
+  .seg button{flex:1;padding:10px;border:1px solid var(--goldSoft);background:#fff;border-radius:10px;font-family:inherit;font-size:13px;cursor:pointer;color:var(--mute);}
+  .seg button.on{background:var(--jade);color:var(--ivory);border-color:var(--jade);}
+  .x{background:none;border:none;font-size:24px;color:var(--mute);cursor:pointer;line-height:1;}
+  .empty{text-align:center;color:var(--mute);font-size:13px;padding:30px 10px;}
+  .pmt-line{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--ivory);}
+  .del{color:var(--henna);font-size:12px;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
+  .toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:var(--jade);color:var(--ivory);padding:11px 18px;border-radius:12px;font-size:13px;z-index:99;opacity:0;transition:opacity .3s;}
+  .toast.show{opacity:1;}
+  .iconbtn{background:none;border:none;cursor:pointer;color:var(--jadeLite);font-family:inherit;font-size:13px;}
+  .install-banner{background:var(--goldSoft);color:var(--ink);padding:10px 14px;border-radius:12px;font-size:13px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .nav button span{font-size:9.5px;}
+  /* calendar */
+  .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .cal-head button{background:#fff;border:1px solid var(--goldSoft);border-radius:10px;width:38px;height:38px;font-size:18px;color:var(--jade);cursor:pointer;font-family:inherit;}
+  .cal-title{font-size:17px;font-weight:600;color:var(--jade);}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+  .cal-dow{text-align:center;font-size:10px;color:var(--mute);padding:4px 0;letter-spacing:.5px;}
+  .cal-cell{aspect-ratio:1;border-radius:10px;border:1px solid var(--goldSoft);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:5px;font-size:13px;cursor:pointer;position:relative;}
+  .cal-cell.empty{border:none;background:transparent;cursor:default;}
+  .cal-cell.today{border-color:var(--gold);border-width:2px;font-weight:700;}
+  .cal-cell.has{background:var(--jade);color:var(--ivory);border-color:var(--jade);}
+  .cal-cell.clash{background:var(--henna);color:#fff;border-color:var(--henna);}
+  .cal-cell .pip{position:absolute;bottom:5px;display:flex;gap:2px;}
+  .cal-cell .pip i{width:4px;height:4px;border-radius:99px;background:var(--gold);display:block;}
+  .cal-cell.has .pip i,.cal-cell.clash .pip i{background:var(--goldSoft);}
+  .cal-cell.muh{border-color:var(--gold);background:#FBF6E7;}
+  .cal-cell .star{position:absolute;top:3px;right:4px;font-size:9px;color:var(--gold);}
+  .cal-cell.has .star,.cal-cell.clash .star{color:var(--goldSoft);}
+  /* rooms */
+  .room-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .room{background:#fff;border:1px solid var(--goldSoft);border-radius:14px;padding:13px;cursor:pointer;position:relative;}
+  .room.occ{background:var(--jade);border-color:var(--jade);color:var(--ivory);}
+  .room .rn{font-weight:600;font-size:15px;}
+  .room .rt{font-size:11px;color:var(--mute);margin-top:1px;}
+  .room.occ .rt{color:var(--goldSoft);}
+  .room .who{font-size:12px;margin-top:8px;line-height:1.4;}
+  .room .vac{font-size:12px;margin-top:8px;color:var(--jadeLite);font-weight:600;}
+  .room .tag{position:absolute;top:11px;right:11px;width:8px;height:8px;border-radius:99px;}
+  .legend{display:flex;gap:14px;justify-content:center;margin-top:14px;font-size:11px;color:var(--mute);}
+  .legend span{display:flex;align-items:center;gap:5px;}
+  .legend i{width:10px;height:10px;border-radius:3px;display:block;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="hdr">
+    <svg class="arch" width="120" height="120" viewBox="0 0 100 100">
+      <path d="M50 5 A45 45 0 0 1 95 50 L50 50 Z" fill="none" stroke="#C9A24B" stroke-width="1" stroke-dasharray="2 3"/>
+      <path d="M50 15 A35 35 0 0 1 85 50 L50 50 Z" fill="none" stroke="#C9A24B" stroke-width="1" stroke-dasharray="2 3"/>
+      <circle cx="50" cy="50" r="3" fill="#C9A24B"/>
+    </svg>
+    <div class="row">
+      <div>
+        <div class="brand-sm">Mehfil Manager</div>
+        <div class="brand-lg">Azad Guest House</div>
+        <div class="brand-loc">Banthra, Lucknow</div>
+      </div>
+      <button id="gearBtn" style="background:none;border:none;cursor:pointer;padding:4px;align-self:flex-start;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8D9A8" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="wrap" id="view"></div>
+</div>
+
+<button class="fab" id="fab">+</button>
+
+<div class="nav">
+  <button data-tab="home" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>Today</button>
+  <button data-tab="bookings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Bookings</button>
+  <button data-tab="calendar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Calendar</button>
+  <button data-tab="billing">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12M6 8h12M9 13c6 0 6 8 0 8M6 13h3M14 21l-8-8"/></svg>Billing</button>
+  <button data-tab="vendors">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Vendors</button>
+  <button data-tab="rooms">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 12V7a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v5M3 12v6m18-6v6M6 9h4"/></svg>Rooms</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─────────── IndexedDB (persists on device) ─────────── */
+const DB_NAME="azad_gh", STORES=["bookings","vendors","tasks","rooms"];
+let db;
+function openDB(){return new Promise((res,rej)=>{
+  const r=indexedDB.open(DB_NAME,2);
+  r.onupgradeneeded=e=>{const d=e.target.result;STORES.forEach(s=>{if(!d.objectStoreNames.contains(s))d.createObjectStore(s,{keyPath:"id"});});};
+  r.onsuccess=e=>{db=e.target.result;res();};
+  r.onerror=e=>rej(e);
+});}
+function tx(store,mode="readonly"){return db.transaction(store,mode).objectStore(store);}
+function getAll(store){return new Promise(res=>{const out=[];tx(store).openCursor().onsuccess=e=>{const c=e.target.result;if(c){out.push(c.value);c.continue();}else res(out);};});}
+function put(store,val){return new Promise(res=>{tx(store,"readwrite").put(val).onsuccess=()=>res();});}
+function del(store,id){return new Promise(res=>{tx(store,"readwrite").delete(id).onsuccess=()=>res();});}
+function clearStore(store){return new Promise(res=>{tx(store,"readwrite").clear().onsuccess=()=>res();});}
+
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const inr=n=>"₹"+Number(n||0).toLocaleString("en-IN");
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800);}
+
+/* ─────────── State ─────────── */
+let S={bookings:[],vendors:[],tasks:[],rooms:[]}, tab="home";
+
+async function refresh(){
+  S.bookings=await getAll("bookings");
+  S.vendors=await getAll("vendors");
+  S.tasks=await getAll("tasks");
+  S.rooms=await getAll("rooms");
+  if(!S.rooms.length&&!localStorageSeeded()){
+    // seed a starter set of rooms on very first run
+    const seed=[{n:"Room 1",t:"AC Double"},{n:"Room 2",t:"AC Double"},{n:"Room 3",t:"AC Double"},{n:"Room 4",t:"Non-AC Double"},{n:"Room 5",t:"Non-AC Double"},{n:"Suite 1",t:"Family Suite"}];
+    for(const s of seed)await put("rooms",{id:uid(),name:s.n,type:s.t,occupant:"",side:"",until:""});
+    markSeeded();
+    S.rooms=await getAll("rooms");
+  }
+  S.bookings.sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+  S.rooms.sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true}));
+  render();
+}
+function localStorageSeeded(){try{return localStorage.getItem("azad_seeded")==="1";}catch(e){return false;}}
+function markSeeded(){try{localStorage.setItem("azad_seeded","1");}catch(e){}}
+
+/* ─────────── Helpers ─────────── */
+function balance(b){return (Number(b.total)||0)-(b.payments||[]).reduce((s,p)=>s+Number(p.amt||0),0);}
+function paid(b){return (b.payments||[]).reduce((s,p)=>s+Number(p.amt||0),0);}
+function fmtDate(d){if(!d)return"";const dt=new Date(d+"T00:00");return dt.toLocaleDateString("en-IN",{day:"numeric",month:"short"});}
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function esc(s){return(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+/* ─────────── Packages ─────────── */
+const PACKAGES={
+  none:{label:"Custom (no package)",total:0,items:[]},
+  basic:{label:"Tehzeeb — Basic",total:150000,items:["Hall + lawn (up to 400 guests)","Basic stage & seating","Lighting & sound","Parking"]},
+  gold:{label:"Adab — Gold",total:300000,items:["Hall + lawn (up to 800 guests)","Decorated stage & floral entry","Premium lighting & sound","Catering coordination","Rooms for 2 families","Parking + valet"]},
+  royal:{label:"Shaahi — Royal",total:550000,items:["Full venue (up to 1200 guests)","Themed décor & flower wall","DJ + premium sound & lighting","Full catering (veg + non-veg)","AC rooms for 4 families","Baraat welcome & valet","Dedicated event manager"]}
+};
+let calMonth=new Date().getMonth(), calYear=new Date().getFullYear();
+
+/* ─────────── Auspicious wedding dates (vivah muhurat) ───────────
+   Indicative shubh vivah dates. ALWAYS verify with a current panchang/qazi —
+   these are planning aids, not religious rulings. Editable by the user too. */
+const MUHURAT_DEFAULT={
+  "2026":["2026-01-19","2026-01-23","2026-01-24","2026-01-28","2026-02-04","2026-02-05","2026-02-13","2026-02-15","2026-02-19","2026-02-22","2026-03-01","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-11-19","2026-11-20","2026-11-22","2026-11-25","2026-11-27","2026-11-30","2026-12-01","2026-12-04","2026-12-05","2026-12-06","2026-12-11"],
+  "2027":["2027-01-16","2027-01-20","2027-01-22","2027-01-25","2027-01-29","2027-02-03","2027-02-06","2027-02-10","2027-02-12","2027-02-19","2027-11-14","2027-11-19","2027-11-20","2027-11-25","2027-11-29","2027-12-01","2027-12-02","2027-12-08","2027-12-09"]
+};
+function muhuratSet(){
+  // user can extend via stored custom dates (key: muhurat_custom)
+  let custom=[];try{custom=JSON.parse(localStorage.getItem("muhurat_custom")||"[]");}catch(e){}
+  const base=Object.values(MUHURAT_DEFAULT).flat();
+  return new Set([...base,...custom]);
+}
+
+
+/* ─────────── Views ─────────── */
+function render(){
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  const v=document.getElementById("view");
+  v.innerHTML=({home:vHome,bookings:vBookings,calendar:vCalendar,billing:vBilling,vendors:vVendors,rooms:vRooms,data:vData}[tab])();
+  bindView();
+}
+
+function vHome(){
+  const upcoming=S.bookings.filter(b=>(b.date||"")>=todayStr());
+  const due=S.bookings.reduce((s,b)=>s+Math.max(0,balance(b)),0);
+  const openTasks=S.tasks.filter(t=>!t.done).length;
+  let cards = upcoming.slice(0,4).map(b=>{
+    const bal=balance(b);
+    return `<div class="card row" data-open="booking" data-id="${b.id}">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="dot" style="background:${bal<=0?'var(--jadeLite)':'var(--gold)'}"></span>
+          <b>${esc(b.family)}</b>
+        </div>
+        <div class="muted" style="margin-top:4px">${esc(b.fn)} · ${fmtDate(b.date)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="chip" style="background:${b.side==='bride'?'var(--goldSoft)':'var(--jade)'};color:${b.side==='bride'?'var(--ink)':'var(--ivory)'}">${b.side==='bride'?'Bride':'Groom'}</div>
+        <div class="muted" style="margin-top:5px;color:${bal<=0?'var(--jadeLite)':'var(--henna)'}">${bal<=0?'Paid':'Due '+inr(bal)}</div>
+      </div>
+    </div>`;
+  }).join("");
+  if(!upcoming.length) cards=`<div class="empty">No upcoming functions yet.<br>Tap + to add a booking.</div>`;
+  return `
+    ${installBanner()}
+    <div class="stat-row">
+      <div class="card stat"><div class="n" style="color:var(--jade)">${upcoming.length}</div><div class="lbl">Upcoming events</div></div>
+      <div class="card stat"><div class="n" style="color:var(--henna)">${due>=100000?'₹'+(due/100000).toFixed(1)+'L':inr(due)}</div><div class="lbl">Balance due</div></div>
+    </div>
+    <div class="stat-row">
+      <div class="card stat"><div class="n" style="color:var(--jadeLite)">${S.bookings.length}</div><div class="lbl">Total bookings</div></div>
+      <div class="card stat"><div class="n" style="color:var(--gold)">${openTasks}</div><div class="lbl">Open tasks</div></div>
+    </div>
+    <div class="sect"><span class="l"></span><span>Upcoming functions</span><span class="r"></span></div>
+    ${cards}`;
+}
+
+function vBookings(){
+  if(!S.bookings.length) return `<div class="empty">No bookings yet.<br>Tap + to add your first function.</div>`;
+  return `<div class="sect"><span class="l"></span><span>All functions</span><span class="r"></span></div>`+
+  S.bookings.map(b=>{
+    const bal=balance(b), pct=b.total>0?Math.min(100,paid(b)/b.total*100):0;
+    return `<div class="card" data-open="booking" data-id="${b.id}">
+      <div class="row">
+        <div><b style="font-size:15px">${esc(b.family)}</b>
+          <div class="muted" style="margin-top:3px">${esc(b.fn)} · ${fmtDate(b.date)}${b.hall?' · '+esc(b.hall):''}</div></div>
+        <span class="chip" style="background:${b.side==='bride'?'var(--goldSoft)':'var(--jade)'};color:${b.side==='bride'?'var(--ink)':'var(--ivory)'}">${b.side==='bride'?'Bride side':'Groom side'}</span>
+      </div>
+      <div class="bar"><div style="width:${pct}%;background:${bal<=0?'var(--jadeLite)':'var(--gold)'}"></div></div>
+      <div class="row" style="margin-top:6px">
+        <span class="muted">Paid ${inr(paid(b))} / ${inr(b.total)}</span>
+        <span style="font-size:12px;font-weight:600;color:${bal<=0?'var(--jadeLite)':'var(--henna)'}">${bal<=0?'Fully paid':'Due '+inr(bal)}</span>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function vCalendar(){
+  const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const first=new Date(calYear,calMonth,1).getDay();
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  // map date -> bookings
+  const byDate={};
+  S.bookings.forEach(b=>{if(b.date){(byDate[b.date]=byDate[b.date]||[]).push(b);}});
+  const muh=muhuratSet();
+  let cells="";
+  for(let i=0;i<first;i++)cells+=`<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=days;d++){
+    const ds=`${calYear}-${String(calMonth+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const evs=byDate[ds]||[];
+    const isToday=ds===todayStr();
+    const isMuh=muh.has(ds);
+    let cls="cal-cell";
+    if(isToday)cls+=" today";
+    if(evs.length>1)cls+=" clash";       // same-date = potential clash
+    else if(evs.length===1)cls+=" has";
+    else if(isMuh)cls+=" muh";           // auspicious & free
+    const star=isMuh?`<span class="star">✦</span>`:"";
+    const pips=evs.length?`<div class="pip">${evs.slice(0,3).map(()=>"<i></i>").join("")}</div>`:"";
+    const tappable=evs.length||isMuh;
+    cells+=`<div class="${cls}" ${tappable?`data-calday="${ds}"`:""}>${star}${d}${pips}</div>`;
+  }
+  const clashes=Object.entries(byDate).filter(([d,e])=>e.length>1&&d>=todayStr()).length;
+  return `
+    <div class="cal-head">
+      <button id="calPrev">‹</button>
+      <div class="cal-title">${monthNames[calMonth]} ${calYear}</div>
+      <button id="calNext">›</button>
+    </div>
+    ${clashes?`<div class="install-banner" style="background:#F3D9D4;color:var(--henna)">⚠ ${clashes} date${clashes>1?'s have':' has'} more than one function booked</div>`:''}
+    <div class="cal-grid">
+      ${["S","M","T","W","T","F","S"].map(d=>`<div class="cal-dow">${d}</div>`).join("")}
+      ${cells}
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--jade)"></i>Booked</span>
+      <span><i style="background:var(--henna)"></i>Clash</span>
+      <span><i style="background:#fff;border:2px solid var(--gold)"></i>Today</span>
+      <span><span style="color:var(--gold);font-size:13px">✦</span>Shubh</span>
+    </div>
+    <div class="muted" style="text-align:center;margin-top:10px;font-size:11px;line-height:1.5">✦ marks indicative auspicious wedding dates.<br>Always confirm with a current panchang or qazi.</div>`;
+}
+
+function vBilling(){
+  const collected=S.bookings.reduce((s,b)=>s+paid(b),0);
+  const due=S.bookings.reduce((s,b)=>s+Math.max(0,balance(b)),0);
+  let ledger=S.bookings.map(b=>{
+    const bal=balance(b);
+    return `<div class="card row" data-open="booking" data-id="${b.id}">
+      <div><b>${esc(b.family)}</b><div class="muted" style="margin-top:2px">${esc(b.fn)}</div></div>
+      <div style="text-align:right"><div style="font-weight:600">${inr(b.total)}</div>
+      <div style="font-size:11px;color:${bal<=0?'var(--jadeLite)':'var(--henna)'}">${bal<=0?'Settled':'Due '+inr(bal)}</div></div>
+    </div>`;
+  }).join("");
+  if(!S.bookings.length) ledger=`<div class="empty">No payments recorded yet.</div>`;
+  return `
+    <div class="card" style="background:var(--jade);border:none;color:var(--ivory)">
+      <div style="font-size:11px;letter-spacing:2px;color:var(--goldSoft);text-transform:uppercase">Total collected</div>
+      <div style="font-size:30px;font-weight:700;margin-top:4px">${inr(collected)}</div>
+      <div style="font-size:13px;color:var(--goldSoft);margin-top:4px">Outstanding ${inr(due)}</div>
+    </div>
+    <div class="sect"><span class="l"></span><span>Payment ledger</span><span class="r"></span></div>
+    ${ledger}
+    <button class="btn btn-ghost" id="exportCsv" style="margin-top:6px">Export ledger as CSV</button>`;
+}
+
+function vVendors(){
+  let tasks=S.tasks.map(t=>`
+    <div class="card row" >
+      <div style="display:flex;gap:11px;align-items:center;flex:1">
+        <span data-toggle="${t.id}" class="dot" style="cursor:pointer;width:20px;height:20px;border:2px solid ${t.done?'var(--jadeLite)':'var(--goldSoft)'};background:${t.done?'var(--jadeLite)':'#fff'};display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px">${t.done?'✓':''}</span>
+        <div><div style="font-size:14px;font-weight:600;${t.done?'text-decoration:line-through;color:var(--mute)':''}">${esc(t.what)}</div>
+        <div class="muted" style="margin-top:2px">${esc(t.who)}${t.due?' · due '+esc(t.due):''}</div></div>
+      </div>
+      <button class="del" data-deltask="${t.id}">Delete</button>
+    </div>`).join("");
+  if(!S.tasks.length) tasks=`<div class="empty">No vendor tasks. Tap + to add one.</div>`;
+  let vlist=S.vendors.map(v=>`
+    <div class="card row">
+      <div><b>${esc(v.name)}</b><div class="muted" style="margin-top:2px">${esc(v.cat)}${v.phone?' · '+esc(v.phone):''}</div></div>
+      <div style="display:flex;gap:12px;align-items:center">
+        ${v.phone?`<a href="tel:${esc(v.phone)}" class="iconbtn">Call</a>`:''}
+        <button class="del" data-delvendor="${v.id}">Remove</button>
+      </div>
+    </div>`).join("");
+  if(!S.vendors.length) vlist=`<div class="empty">No vendors added yet.</div>`;
+  return `
+    <div class="sect"><span class="l"></span><span>Vendor tasks</span><span class="r"></span></div>${tasks}
+    <div class="sect"><span class="l"></span><span>Empanelled vendors</span><span class="r"></span></div>${vlist}`;
+}
+
+function vRooms(){
+  const occ=S.rooms.filter(r=>r.occupant).length, total=S.rooms.length;
+  let grid=S.rooms.map(r=>{
+    const isOcc=!!r.occupant;
+    return `<div class="room ${isOcc?'occ':''}" data-room="${r.id}">
+      <span class="tag" style="background:${isOcc?(r.side==='bride'?'var(--goldSoft)':'var(--gold)'):'var(--jadeLite)'}"></span>
+      <div class="rn">${esc(r.name)}</div>
+      <div class="rt">${esc(r.type||'')}</div>
+      ${isOcc?`<div class="who">${esc(r.occupant)}${r.side?`<br><span style="font-size:10px;opacity:.85">${r.side==='bride'?'Bride side':'Groom side'}${r.until?' · till '+fmtDate(r.until):''}</span>`:''}</div>`:`<div class="vac">Vacant</div>`}
+    </div>`;
+  }).join("");
+  if(!total) grid=`<div class="empty">No rooms yet. Tap "Add room" below.</div>`;
+  return `
+    <div class="stat-row">
+      <div class="card stat"><div class="n" style="color:var(--henna)">${occ}</div><div class="lbl">Occupied</div></div>
+      <div class="card stat"><div class="n" style="color:var(--jadeLite)">${total-occ}</div><div class="lbl">Vacant</div></div>
+      <div class="card stat"><div class="n" style="color:var(--jade)">${total}</div><div class="lbl">Total rooms</div></div>
+    </div>
+    <div class="sect"><span class="l"></span><span>Room occupancy</span><span class="r"></span></div>
+    <div class="room-grid">${grid}</div>
+    <button class="btn btn-ghost" id="addRoom" style="margin-top:14px">Add room</button>
+    <div class="muted" style="text-align:center;margin-top:8px;font-size:11px">Tap a room to check a guest in or out</div>`;
+}
+
+function roomForm(r){
+  const occupied=!!r.occupant;
+  const bg=modal(`
+    <div class="row"><h3>${esc(r.name)}</h3><button class="x" data-close>×</button></div>
+    <div class="muted" style="margin-bottom:4px">${esc(r.type||'')}</div>
+    <label>Room name</label><input id="r_name" value="${esc(r.name)}">
+    <label>Type</label><input id="r_type" value="${esc(r.type||'')}" placeholder="AC Double / Suite">
+    <div class="sect"><span class="l"></span><span>${occupied?'Current guest':'Check in a guest'}</span><span class="r"></span></div>
+    <label>Guest / family name</label><input id="r_occ" value="${esc(r.occupant||'')}" placeholder="e.g. Khan family — 2 guests">
+    <label>Side</label>
+    <div class="seg">
+      <button type="button" data-rside="" class="${!r.side?'on':''}">—</button>
+      <button type="button" data-rside="groom" class="${r.side==='groom'?'on':''}">Groom</button>
+      <button type="button" data-rside="bride" class="${r.side==='bride'?'on':''}">Bride</button>
+    </div>
+    <label>Check-out date</label><input id="r_until" type="date" value="${r.until||''}">
+    <button class="btn btn-gold" id="saveRoom" style="margin-top:18px">Save</button>
+    ${occupied?`<button class="btn btn-jade" id="checkout" style="margin-top:10px">Check out (mark vacant)</button>`:''}
+    <button class="btn" id="delRoom" style="margin-top:10px;background:#fff;color:var(--henna);border:1px solid var(--henna)">Remove room</button>
+  `);
+  let rside=r.side||"";
+  bg.querySelectorAll("[data-rside]").forEach(btn=>btn.onclick=()=>{rside=btn.dataset.rside;bg.querySelectorAll("[data-rside]").forEach(x=>x.classList.toggle("on",x===btn));});
+  bg.querySelector("[data-close]").onclick=()=>bg.remove();
+  bg.querySelector("#saveRoom").onclick=async()=>{
+    await put("rooms",{...r,name:val("r_name")||r.name,type:val("r_type"),occupant:val("r_occ"),side:rside,until:val("r_until")});
+    bg.remove();await refresh();toast("Room updated");
+  };
+  if(occupied)bg.querySelector("#checkout").onclick=async()=>{
+    await put("rooms",{...r,occupant:"",side:"",until:""});bg.remove();await refresh();toast(r.name+" is now vacant");
+  };
+  bg.querySelector("#delRoom").onclick=async()=>{
+    if(confirm("Remove this room?")){await del("rooms",r.id);bg.remove();await refresh();toast("Room removed");}
+  };
+}
+
+function newRoomForm(){
+  const bg=modal(`
+    <div class="row"><h3>Add room</h3><button class="x" data-close>×</button></div>
+    <label>Room name</label><input id="nr_name" placeholder="Room 7 / Suite 2">
+    <label>Type</label><input id="nr_type" placeholder="AC Double / Family Suite">
+    <button class="btn btn-gold" id="saveNewRoom" style="margin-top:18px">Add room</button>`);
+  bg.querySelector("[data-close]").onclick=()=>bg.remove();
+  bg.querySelector("#saveNewRoom").onclick=async()=>{
+    await put("rooms",{id:uid(),name:val("nr_name")||"New room",type:val("nr_type"),occupant:"",side:"",until:""});
+    bg.remove();await refresh();toast("Room added");
+  };
+}
+
+function vData(){
+  return `
+    <div class="sect"><span class="l"></span><span>Backup &amp; restore</span><span class="r"></span></div>
+    <div class="card">
+      <div style="font-size:14px;font-weight:600;margin-bottom:4px">Your data lives only on this phone</div>
+      <div class="muted" style="line-height:1.5">Export a backup file regularly. If your phone is wiped or you switch devices, import that file to restore everything.</div>
+    </div>
+    <button class="btn btn-jade" id="exportJson" style="margin-bottom:10px">Export backup (JSON)</button>
+    <label class="btn btn-ghost" style="display:block;text-align:center;cursor:pointer">Import backup (JSON)
+      <input type="file" id="importJson" accept="application/json" style="display:none">
+    </label>
+    <div class="sect"><span class="l"></span><span>Danger zone</span><span class="r"></span></div>
+    <button class="btn" id="wipe" style="background:#fff;color:var(--henna);border:1px solid var(--henna)">Erase all data</button>
+    <div class="muted" style="text-align:center;margin-top:24px;font-size:11px">Azad Guest House · Banthra, Lucknow<br>Records: ${S.bookings.length} bookings · ${S.vendors.length} vendors · ${S.tasks.length} tasks</div>`;
+}
+
+function installBanner(){
+  if(window.matchMedia('(display-mode: standalone)').matches) return "";
+  return `<div class="install-banner"><span>Install: tap browser menu → "Add to Home screen"</span></div>`;
+}
+
+/* ─────────── Modals ─────────── */
+function dayList(ds,evs){
+  const bg=modal(`
+    <div class="row"><h3>${new Date(ds+'T00:00').toLocaleDateString("en-IN",{weekday:'long',day:'numeric',month:'long'})}</h3><button class="x" data-close>×</button></div>
+    ${evs.length>1?`<div class="install-banner" style="background:#F3D9D4;color:var(--henna);margin:8px 0">⚠ ${evs.length} functions on this date — check for hall/resource clash</div>`:''}
+    ${evs.map(b=>`<div class="card row" data-pick="${b.id}" style="cursor:pointer"><div><b>${esc(b.family)}</b><div class="muted" style="margin-top:2px">${esc(b.fn)}${b.hall?' · '+esc(b.hall):''}</div></div><span class="chip" style="background:${b.side==='bride'?'var(--goldSoft)':'var(--jade)'};color:${b.side==='bride'?'var(--ink)':'var(--ivory)'}">${b.side==='bride'?'Bride':'Groom'}</span></div>`).join("")}
+  `);
+  bg.querySelector("[data-close]").onclick=()=>bg.remove();
+  bg.querySelectorAll("[data-pick]").forEach(el=>el.onclick=()=>{const b=S.bookings.find(x=>x.id===el.dataset.pick);bg.remove();bookingForm(b);});
+}
+
+function modal(html){
+  const bg=document.createElement("div");bg.className="modal-bg";
+  bg.innerHTML=`<div class="modal">${html}</div>`;
+  bg.addEventListener("click",e=>{if(e.target===bg)bg.remove();});
+  document.body.appendChild(bg);
+  return bg;
+}
+
+function bookingForm(existing){
+  const b=existing||{side:"groom",payments:[]};
+  const bg=modal(`
+    <div class="row"><h3>${existing?'Edit booking':'New booking'}</h3><button class="x" data-close>×</button></div>
+    <label>Family name</label><input id="f_family" value="${esc(b.family||'')}" placeholder="e.g. Khan Family">
+    <label>Function</label><input id="f_fn" value="${esc(b.fn||'')}" placeholder="e.g. Nikah + Walima">
+    <div class="grid2">
+      <div><label>Date</label><input id="f_date" type="date" value="${b.date||''}"></div>
+      <div><label>Hall / Lawn</label><input id="f_hall" value="${esc(b.hall||'')}" placeholder="Main Lawn"></div>
+    </div>
+    <label>Side</label>
+    <div class="seg">
+      <button type="button" data-side="groom" class="${b.side==='groom'?'on':''}">Groom side</button>
+      <button type="button" data-side="bride" class="${b.side==='bride'?'on':''}">Bride side</button>
+    </div>
+    <label>Package</label>
+    <select id="f_pkg">
+      ${Object.entries(PACKAGES).map(([k,p])=>`<option value="${k}" ${b.pkg===k?'selected':''}>${esc(p.label)}${p.total?' · '+inr(p.total):''}</option>`).join("")}
+    </select>
+    <label>Total amount (₹)</label><input id="f_total" type="number" inputmode="numeric" value="${b.total||''}" placeholder="320000">
+    ${existing?renderPayments(b):''}
+    <button class="btn btn-gold" id="saveBooking" style="margin-top:18px">${existing?'Save changes':'Add booking'}</button>
+    ${existing?`
+    <div class="grid2" style="margin-top:10px">
+      <button class="btn btn-ghost" id="pdfQuote">Quote PDF</button>
+      <button class="btn btn-ghost" id="pdfInvoice">Invoice PDF</button>
+    </div>
+    <button class="btn" id="waShare" style="margin-top:10px;background:#25D366;color:#fff">Share on WhatsApp</button>
+    <button class="btn" id="delBooking" style="margin-top:10px;background:#fff;color:var(--henna);border:1px solid var(--henna)">Delete booking</button>`:''}
+  `);
+  let side=b.side||"groom";
+  bg.querySelectorAll("[data-side]").forEach(btn=>btn.onclick=()=>{side=btn.dataset.side;bg.querySelectorAll("[data-side]").forEach(x=>x.classList.toggle("on",x===btn));});
+  const pkgSel=bg.querySelector("#f_pkg");
+  pkgSel.onchange=()=>{const p=PACKAGES[pkgSel.value];if(p&&p.total){bg.querySelector("#f_total").value=p.total;}};
+  bg.querySelector("[data-close]").onclick=()=>bg.remove();
+  bg.querySelector("#saveBooking").onclick=async()=>{
+    const rec={
+      id:b.id||uid(),
+      family:val("f_family")||"Unnamed",
+      fn:val("f_fn"),date:val("f_date"),hall:val("f_hall"),
+      side,pkg:pkgSel.value,total:Number(val("f_total"))||0,
+      payments:b.payments||[]
+    };
+    await put("bookings",rec);bg.remove();await refresh();toast("Booking saved");
+  };
+  if(existing){
+    bg.querySelector("#pdfQuote").onclick=()=>genDoc(b,"quote");
+    bg.querySelector("#pdfInvoice").onclick=()=>genDoc(b,"invoice");
+    bg.querySelector("#waShare").onclick=()=>waShare(b);
+    bg.querySelector("#delBooking").onclick=async()=>{
+      if(confirm("Delete this booking?")){await del("bookings",b.id);bg.remove();await refresh();toast("Booking deleted");}
+    };
+    bg.querySelector("#addPmt").onclick=async()=>{
+      const amt=Number(val("p_amt"));if(!amt){toast("Enter an amount");return;}
+      b.payments=b.payments||[];b.payments.push({amt,date:val("p_date")||todayStr(),note:val("p_note")});
+      await put("bookings",b);bg.remove();await refresh();bookingForm(S.bookings.find(x=>x.id===b.id));toast("Payment added");
+    };
+    bg.querySelectorAll("[data-delpmt]").forEach(btn=>btn.onclick=async()=>{
+      b.payments.splice(Number(btn.dataset.delpmt),1);await put("bookings",b);bg.remove();await refresh();bookingForm(S.bookings.find(x=>x.id===b.id));
+    });
+  }
+}
+
+function renderPayments(b){
+  const lines=(b.payments||[]).map((p,i)=>`<div class="pmt-line"><span>${fmtDate(p.date)} ${p.note?'· '+esc(p.note):''}</span><span style="display:flex;gap:10px"><b>${inr(p.amt)}</b><button class="del" data-delpmt="${i}">✕</button></span></div>`).join("")||`<div class="muted" style="padding:6px 0">No payments yet.</div>`;
+  const bal=balance(b);
+  return `
+    <div class="sect"><span class="l"></span><span>Payments</span><span class="r"></span></div>
+    ${lines}
+    <div class="row" style="margin-top:8px;font-size:13px"><span class="muted">Balance</span><b style="color:${bal<=0?'var(--jadeLite)':'var(--henna)'}">${inr(bal)}</b></div>
+    <div class="grid2" style="margin-top:12px">
+      <div><label>Add payment (₹)</label><input id="p_amt" type="number" inputmode="numeric" placeholder="50000"></div>
+      <div><label>Date</label><input id="p_date" type="date" value="${todayStr()}"></div>
+    </div>
+    <label>Note (optional)</label><input id="p_note" placeholder="Advance / UPI / cash">
+    <button class="btn btn-jade" id="addPmt" style="margin-top:12px">Add payment</button>`;
+}
+
+function taskForm(){
+  const bg=modal(`
+    <div class="row"><h3>New vendor task</h3><button class="x" data-close>×</button></div>
+    <label>Task</label><input id="t_what" placeholder="Confirm 800 pax menu">
+    <label>Vendor / who</label><input id="t_who" placeholder="Wahid Caterers">
+    <label>Due</label><input id="t_due" placeholder="Tomorrow / 12 Jul">
+    <button class="btn btn-gold" id="saveTask" style="margin-top:18px">Add task</button>`);
+  bg.querySelector("[data-close]").onclick=()=>bg.remove();
+  bg.querySelector("#saveTask").onclick=async()=>{
+    await put("tasks",{id:uid(),what:val("t_what")||"Task",who:val("t_who"),due:val("t_due"),done:false});
+    bg.remove();await refresh();toast("Task added");
+  };
+}
+
+function vendorForm(){
+  const bg=modal(`
+    <div class="row"><h3>Add vendor</h3><button class="x" data-close>×</button></div>
+    <label>Name</label><input id="v_name" placeholder="Wahid Caterers">
+    <label>Category</label><input id="v_cat" placeholder="Catering">
+    <label>Phone</label><input id="v_phone" type="tel" inputmode="tel" placeholder="98XXXXXXXX">
+    <button class="btn btn-gold" id="saveVendor" style="margin-top:18px">Add vendor</button>`);
+  bg.querySelector("[data-close]").onclick=()=>bg.remove();
+  bg.querySelector("#saveVendor").onclick=async()=>{
+    await put("vendors",{id:uid(),name:val("v_name")||"Vendor",cat:val("v_cat"),phone:val("v_phone")});
+    bg.remove();await refresh();toast("Vendor added");
+  };
+}
+
+function addMenu(){
+  const bg=modal(`
+    <div class="row"><h3>Add new</h3><button class="x" data-close>×</button></div>
+    <button class="btn btn-jade" id="aBooking" style="margin-top:8px">Booking / function</button>
+    <button class="btn btn-ghost" id="aTask" style="margin-top:10px">Vendor task</button>
+    <button class="btn btn-ghost" id="aVendor" style="margin-top:10px">Vendor</button>
+    <button class="btn btn-ghost" id="aRoom" style="margin-top:10px">Room</button>`);
+  bg.querySelector("[data-close]").onclick=()=>bg.remove();
+  bg.querySelector("#aBooking").onclick=()=>{bg.remove();bookingForm();};
+  bg.querySelector("#aTask").onclick=()=>{bg.remove();taskForm();};
+  bg.querySelector("#aVendor").onclick=()=>{bg.remove();vendorForm();};
+  bg.querySelector("#aRoom").onclick=()=>{bg.remove();newRoomForm();};
+}
+
+const val=id=>{const e=document.getElementById(id);return e?e.value.trim():"";};
+
+/* ─────────── WhatsApp share ─────────── */
+function waShare(b){
+  const pkg=PACKAGES[b.pkg]||PACKAGES.none;
+  const bal=balance(b), paidAmt=paid(b);
+  const dt=b.date?new Date(b.date+"T00:00").toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"}):"Date to be confirmed";
+  const L=[];
+  L.push("*Azad Guest House* — Banthra, Lucknow");
+  L.push("");
+  L.push("Booking details:");
+  L.push("• Family: "+(b.family||"—"));
+  if(b.fn)L.push("• Function: "+b.fn);
+  L.push("• Date: "+dt);
+  if(b.hall)L.push("• Venue: "+b.hall);
+  if(b.pkg&&b.pkg!=="none")L.push("• Package: "+pkg.label);
+  L.push("• Total: "+inr(b.total));
+  if(paidAmt)L.push("• Advance paid: "+inr(paidAmt));
+  L.push("• "+(bal<=0?"Status: Fully paid":"Balance due: "+inr(bal)));
+  L.push("");
+  L.push("Thank you for choosing us for your celebration!");
+  const text=encodeURIComponent(L.join("\n"));
+  window.open("https://wa.me/?text="+text,"_blank");
+}
+
+/* ─────────── Quote / Invoice document ─────────── */
+function genDoc(b,type){
+  const pkg=PACKAGES[b.pkg]||PACKAGES.none;
+  const isInvoice=type==="invoice";
+  const docNo=(isInvoice?"INV":"QT")+"-"+(b.id||"").slice(-5).toUpperCase();
+  const items=pkg.items.length?pkg.items:[b.fn||"Event booking"];
+  const paidAmt=paid(b), bal=balance(b);
+  const pmtRows=(b.payments||[]).map(p=>`<tr><td>${fmtDate(p.date)}</td><td>${esc(p.note||'Payment')}</td><td style="text-align:right">${inr(p.amt)}</td></tr>`).join("");
+  const html=`<!doctype html><html><head><meta charset="utf-8"><title>${docNo}</title>
+  <style>
+    @page{margin:18mm;}
+    *{font-family:Georgia,serif;color:#1A1714;box-sizing:border-box;}
+    body{margin:0;padding:24px;}
+    .top{display:flex;justify-content:space-between;border-bottom:3px solid #15433A;padding-bottom:14px;}
+    .name{font-size:24px;color:#15433A;font-weight:700;}
+    .loc{font-size:12px;color:#6E665A;margin-top:2px;}
+    .doctype{text-align:right;}
+    .doctype .t{font-size:20px;letter-spacing:3px;text-transform:uppercase;color:#C9A24B;font-weight:700;}
+    .doctype .no{font-size:12px;color:#6E665A;margin-top:4px;}
+    .meta{display:flex;justify-content:space-between;margin:22px 0;font-size:13px;}
+    .meta b{color:#15433A;}
+    table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px;}
+    th{background:#15433A;color:#F6F1E4;text-align:left;padding:9px 12px;font-weight:600;}
+    th:last-child,td:last-child{text-align:right;}
+    td{padding:9px 12px;border-bottom:1px solid #E8D9A8;}
+    .totbox{margin-top:18px;margin-left:auto;width:60%;font-size:14px;}
+    .totbox div{display:flex;justify-content:space-between;padding:6px 12px;}
+    .totbox .grand{background:#F6F1E4;font-weight:700;color:#15433A;border-radius:6px;}
+    .totbox .due{color:#9C3B2E;font-weight:700;}
+    .foot{margin-top:36px;font-size:11px;color:#6E665A;border-top:1px solid #E8D9A8;padding-top:12px;text-align:center;}
+    .terms{margin-top:24px;font-size:11px;color:#6E665A;line-height:1.6;}
+    @media print{.noprint{display:none;}body{padding:0;}}
+    .noprint{position:fixed;top:12px;right:12px;}
+    .noprint button{background:#15433A;color:#fff;border:none;padding:10px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:Georgia,serif;}
+  </style></head><body>
+  <div class="noprint"><button onclick="window.print()">Save as PDF / Print</button></div>
+  <div class="top">
+    <div><div class="name">Azad Guest House</div><div class="loc">Banthra, Lucknow · Uttar Pradesh</div></div>
+    <div class="doctype"><div class="t">${isInvoice?'Invoice':'Quotation'}</div><div class="no">${docNo}<br>${new Date().toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"})}</div></div>
+  </div>
+  <div class="meta">
+    <div><b>Billed to</b><br>${esc(b.family)}<br>${b.side==='bride'?'Bride side':'Groom side'}</div>
+    <div style="text-align:right"><b>Function</b><br>${esc(b.fn||'—')}<br>${b.date?new Date(b.date+'T00:00').toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"}):'Date TBC'}${b.hall?'<br>'+esc(b.hall):''}</div>
+  </div>
+  <table>
+    <thead><tr><th>Description</th><th>Amount</th></tr></thead>
+    <tbody>
+      <tr><td><b>${esc(pkg.label)}</b>${pkg.items.length?'<br><span style="font-size:11px;color:#6E665A">'+pkg.items.map(esc).join(' · ')+'</span>':''}</td><td>${inr(b.total)}</td></tr>
+    </tbody>
+  </table>
+  <div class="totbox">
+    <div><span>Subtotal</span><span>${inr(b.total)}</span></div>
+    ${isInvoice&&paidAmt?`<div><span>Paid</span><span>− ${inr(paidAmt)}</span></div>`:''}
+    <div class="grand"><span>${isInvoice?'Balance due':'Total'}</span><span class="${isInvoice&&bal>0?'due':''}">${inr(isInvoice?bal:b.total)}</span></div>
+  </div>
+  ${isInvoice&&pmtRows?`<h4 style="color:#15433A;margin-top:28px">Payment history</h4><table><thead><tr><th>Date</th><th>Note</th><th>Amount</th></tr></thead><tbody>${pmtRows}</tbody></table>`:''}
+  <div class="terms"><b>Terms:</b> ${isInvoice?'Kindly clear the outstanding balance before the event date.':'This quotation is valid for 15 days. 30% advance confirms the booking. Dates are held only on receipt of advance.'} Payments accepted via UPI, bank transfer, or cash.</div>
+  <div class="foot">Azad Guest House · Banthra, Lucknow · Thank you for choosing us for your celebration</div>
+  </body></html>`;
+  const w=window.open("","_blank");
+  if(!w){toast("Allow pop-ups to generate PDF");return;}
+  w.document.write(html);w.document.close();
+}
+
+
+function download(name,content,type){
+  const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);
+}
+async function exportJson(){
+  const data={app:"AzadGuestHouse",version:1,exported:new Date().toISOString(),...S};
+  download(`azad-backup-${todayStr()}.json`,JSON.stringify(data,null,2),"application/json");
+  toast("Backup downloaded");
+}
+function exportCsv(){
+  const rows=[["Family","Function","Date","Hall","Side","Total","Paid","Balance"]];
+  S.bookings.forEach(b=>rows.push([b.family,b.fn,b.date,b.hall,b.side,b.total,paid(b),balance(b)]));
+  const csv=rows.map(r=>r.map(x=>`"${String(x??"").replace(/"/g,'""')}"`).join(",")).join("\n");
+  download(`azad-ledger-${todayStr()}.csv`,csv,"text/csv");
+  toast("CSV downloaded");
+}
+async function importJson(file){
+  const text=await file.text();
+  try{
+    const d=JSON.parse(text);
+    if(!d.bookings&&!d.vendors&&!d.tasks){toast("Not a valid backup");return;}
+    if(!confirm("Replace all current data with this backup?"))return;
+    for(const s of STORES){await clearStore(s);for(const item of (d[s]||[]))await put(s,item);}
+    await refresh();toast("Backup restored");
+  }catch(e){toast("Could not read file");}
+}
+
+/* ─────────── Event binding ─────────── */
+function bindView(){
+  document.querySelectorAll("[data-room]").forEach(el=>el.onclick=()=>{
+    const r=S.rooms.find(x=>x.id===el.dataset.room);if(r)roomForm(r);
+  });
+  const ar=document.getElementById("addRoom");if(ar)ar.onclick=newRoomForm;
+  const cp=document.getElementById("calPrev");if(cp)cp.onclick=()=>{calMonth--;if(calMonth<0){calMonth=11;calYear--;}render();};
+  const cn=document.getElementById("calNext");if(cn)cn.onclick=()=>{calMonth++;if(calMonth>11){calMonth=0;calYear++;}render();};
+  document.querySelectorAll("[data-calday]").forEach(el=>el.onclick=()=>{
+    const ds=el.dataset.calday;
+    const evs=S.bookings.filter(b=>b.date===ds);
+    if(evs.length===1){bookingForm(evs[0]);}
+    else if(evs.length>1){dayList(ds,evs);}
+    else{bookingForm({side:"groom",payments:[],date:ds});} // free auspicious date → start a booking
+  });
+  document.querySelectorAll("[data-open='booking']").forEach(el=>el.onclick=()=>{
+    const b=S.bookings.find(x=>x.id===el.dataset.id);if(b)bookingForm(b);
+  });
+  document.querySelectorAll("[data-toggle]").forEach(el=>el.onclick=async()=>{
+    const t=S.tasks.find(x=>x.id===el.dataset.toggle);t.done=!t.done;await put("tasks",t);await refresh();
+  });
+  document.querySelectorAll("[data-deltask]").forEach(el=>el.onclick=async()=>{await del("tasks",el.dataset.deltask);await refresh();toast("Task removed");});
+  document.querySelectorAll("[data-delvendor]").forEach(el=>el.onclick=async()=>{await del("vendors",el.dataset.delvendor);await refresh();toast("Vendor removed");});
+  const ej=document.getElementById("exportJson");if(ej)ej.onclick=exportJson;
+  const ec=document.getElementById("exportCsv");if(ec)ec.onclick=exportCsv;
+  const ij=document.getElementById("importJson");if(ij)ij.onchange=e=>{if(e.target.files[0])importJson(e.target.files[0]);};
+  const w=document.getElementById("wipe");if(w)w.onclick=async()=>{if(confirm("Erase ALL data permanently? Export a backup first."))if(confirm("Are you sure? This cannot be undone.")){for(const s of STORES)await clearStore(s);await refresh();toast("All data erased");}};
+}
+
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();});
+document.getElementById("fab").onclick=addMenu;
+document.getElementById("gearBtn").onclick=()=>{tab="data";render();};
+
+/* ─────────── Boot ─────────── */
+(async()=>{await openDB();await refresh();})();
+</script>
+</body>
+</html>
